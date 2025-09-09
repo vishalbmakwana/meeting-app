@@ -10,6 +10,8 @@ import java.util.List;
 
 public class MeetingDTO {
 
+    private String uuid;
+
     @NotBlank(message = "Name is required")
     private String title;
     

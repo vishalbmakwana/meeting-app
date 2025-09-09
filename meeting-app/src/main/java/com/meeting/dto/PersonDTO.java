@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 public class PersonDTO {
 
-    private Long id;
+    private String uuid;
 
     @NotBlank(message = "Name is required")
     private String name;

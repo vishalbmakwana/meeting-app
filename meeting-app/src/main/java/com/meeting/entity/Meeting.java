@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Meeting {
 
-    private Long id;
+    private String uuid;
 
     @NotBlank(message = "Name is required")
     private String title;
