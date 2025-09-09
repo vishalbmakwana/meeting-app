@@ -101,6 +101,11 @@ public class MeetingServiceImpl implements MeetingService {
         return suggestions;
     }
 
+    @Override
+    public List<Meeting> getAllMeetings() {
+        return new ArrayList<>(meetings);
+    }
+
     private static void suggestAvailableTimeSlotsValidation(List<Person> participants, LocalDateTime startDate, LocalDateTime endDate) {
         if (participants == null || participants.isEmpty()) {
         throw new IllegalArgumentException("At least one person is required");

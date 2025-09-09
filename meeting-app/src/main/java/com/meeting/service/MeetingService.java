@@ -4,6 +4,7 @@ import com.meeting.entity.Meeting;
 import com.meeting.entity.Person;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 public interface MeetingService {
@@ -14,4 +15,6 @@ public interface MeetingService {
     List<Meeting> getUpcomingMeetingsForPerson(Person person);
 
     List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int maxSuggestions);
+
+    List<Meeting> getAllMeetings();
 }

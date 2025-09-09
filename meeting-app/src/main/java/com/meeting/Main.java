@@ -89,6 +89,31 @@ public class Main {
             for (LocalDateTime slot : suggestions) {
                 System.out.println(slot.format(FORMATTER));
             }
+            // Create a meeting using suggested slot
+            if (!suggestions.isEmpty()) {
+                LocalDateTime suggestedSlot = suggestions.get(0);
+                Meeting meeting3 = meetingService.createMeeting(
+                    "Planning", suggestedSlot, alice3, Arrays.asList(alice1, alice2)
+                );
+                System.out.println("Created meeting using suggested slot: " + 
+                    meeting3.getTitle() + " at " + suggestedSlot.format(FORMATTER));
+            }
+            
+            System.out.println("Final statistics:");
+            System.out.println("Total persons: " + personService.getAllPersons().size());
+            System.out.println("Total meetings: " + meetingService.getAllMeetings().size());
+            
+            // Show all meetings
+            System.out.println("All meetings:");
+            List<Meeting> allMeetings = meetingService.getAllMeetings();
+            for (Meeting meeting : allMeetings) {
+                System.out.println(meeting.getTitle() + 
+                    " (" + meeting.getStartTime().format(FORMATTER) + " - " + 
+                    meeting.getEndTime().format(FORMATTER) + ")" +
+                    "  Organizer: " + meeting.getOrganizer().getName() +
+                    "  Attendees: " + meeting.getAttendees().size());
+            }
+            
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());
             e.printStackTrace();
