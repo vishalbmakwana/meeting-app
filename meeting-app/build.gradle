@@ -26,3 +26,7 @@ dependencies {
     // Optional: Spring Boot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+test {
+    useJUnitPlatform()
+}
