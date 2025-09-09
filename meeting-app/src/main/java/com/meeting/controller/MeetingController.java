@@ -89,4 +89,42 @@ public class MeetingController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/schedule/{uuid}")
+    public ResponseEntity<?> getPersonSchedule(@PathVariable String uuid) {
+        Optional<Person> person = personService.findById(uuid);
+        if (person.isEmpty()) {
+            return ResponseEntity.badRequest().body("Person with uuid " + uuid + " not found");
+        }
+
+        List<Meeting> upcomingMeetings = meetingService.getUpcomingMeetingsForPerson(person.get());
+        log.info("Retrieved {} upcoming meetings for {}", upcomingMeetings.size(), person.get().getEmail());
+        return ResponseEntity.ok(upcomingMeetings);
+    }
+
+    @GetMapping("/suggest-slots")
+    public ResponseEntity<?> suggestTimeSlots(
+            @RequestParam List<String> emails,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
+            @RequestParam(defaultValue = "5") int maxSuggestions) {
+        try {
+            // Find all persons
+            List<Person> persons = new ArrayList<>();
+            for (String email : emails) {
+                Optional<Person> person = personService.findByEmail(email);
+                if (person.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Person with email " + email + " not found");
+                }
+                persons.add(person.get());
+            }
+            List<LocalDateTime> suggestions = meetingService.suggestAvailableTimeSlots(
+                    persons, startDate, endDate, maxSuggestions);
+            log.info("Found {} available time slots for {} persons", suggestions.size(), persons.size());
+            return ResponseEntity.ok(suggestions);
+        } catch (IllegalArgumentException e) {
+            log.error("Failed to suggest time slots: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
