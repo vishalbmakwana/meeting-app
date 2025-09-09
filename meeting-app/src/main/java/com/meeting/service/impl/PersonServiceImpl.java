@@ -44,4 +44,10 @@ public class PersonServiceImpl implements PersonService {
         }
         return personsByEmail.containsKey(email.trim().toLowerCase());
     }
+
+    @Override
+    public List<Person> getAllPersons() {
+        return new ArrayList<>(personsByEmail.values());
+    }
+    
 }
