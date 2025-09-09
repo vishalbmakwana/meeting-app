@@ -10,4 +10,6 @@ public interface MeetingService {
     Meeting createMeeting(String title, LocalDateTime startTime, Person organizer, List<Person> attendees);
 
     boolean isTimeSlotAvailable(List<Person> persons, LocalDateTime startTime);
+
+    List<Meeting> getUpcomingMeetingsForPerson(Person person);
 }

@@ -9,11 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +65,18 @@ public class MeetingServiceImpl implements MeetingService {
                 // meeting time = start 2 end 3 then >> 2 is before 3 (endTime) and 2 (startTime) is before 3 > result deny
                 // meeting time = start 3 end 4 then >> 3 is not before 3 (endTime) and 2 (startTime) is before 4 > result allow
                 .noneMatch(meeting ->  startTime.isBefore(meeting.getEndTime()) && meeting.getStartTime().isBefore(endTime));
+    }
+
+    @Override
+    public List<Meeting> getUpcomingMeetingsForPerson(Person person) {
+        if (person == null) {
+            return new ArrayList<>();
+        }
+        // to fetch meetings after current time - sorted by start time to display it properly
+        return meetings.stream()
+                .filter(meeting -> meeting.getStartTime().isAfter(LocalDateTime.now()))
+                .filter(meeting -> meeting.getOrganizer().equals(person) || meeting.getAttendees().contains(person))
+                .sorted(Comparator.comparing(Meeting::getStartTime))
+                .collect(Collectors.toList());
     }
 }

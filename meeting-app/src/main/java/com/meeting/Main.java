@@ -10,6 +10,7 @@ import com.meeting.service.impl.PersonServiceImpl;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     
@@ -38,8 +39,8 @@ public class Main {
                 System.out.println("Duplicate email validation: " + e.getMessage());
             }
             
-            LocalDateTime meeting1Time = LocalDateTime.of(2024, 12, 15, 10, 0);
-            LocalDateTime meeting2Time = LocalDateTime.of(2024, 12, 15, 14, 0);
+            LocalDateTime meeting1Time = LocalDateTime.of(2025, 9, 15, 10, 0);
+            LocalDateTime meeting2Time = LocalDateTime.of(2025, 9, 15, 14, 0);
 
             Meeting meeting1 = meetingService.createMeeting(
                 "Standup", meeting1Time, alice1, Arrays.asList(alice2, alice3)
@@ -52,18 +53,28 @@ public class Main {
             
             // invalid time - min
             try {
-                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 11, 10, 30);
+                LocalDateTime invalidTime = LocalDateTime.of(2025, 9, 11, 10, 30);
                 meetingService.createMeeting("Invalid", invalidTime, alice1, Arrays.asList(alice2));
             } catch (IllegalArgumentException e) {
                 System.out.println("invalid validation: " + e.getMessage());
             }
             // time conflict
             try {
-                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 15, 10, 0);
+                LocalDateTime invalidTime = LocalDateTime.of(2025, 9, 15, 10, 0);
                 meetingService.createMeeting("Conflict", invalidTime, alice1, Arrays.asList(alice2));
             } catch (IllegalArgumentException e) {
                 System.out.println("time conflict : " + e.getMessage());
             }
+            // schedules - upcoming meetings
+            List<Meeting> alice1Schedule = meetingService.getUpcomingMeetingsForPerson(alice1);
+            System.out.println("upcoming (" + alice1Schedule.size() + "):");
+            for (Meeting meeting : alice1Schedule) {
+                System.out.println(meeting.getTitle() + " at " +
+                    meeting.getStartTime().format(FORMATTER) + " (Organizer: " + 
+                    meeting.getOrganizer().getName() + ")");
+            }
+            
+         
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());
             e.printStackTrace();
