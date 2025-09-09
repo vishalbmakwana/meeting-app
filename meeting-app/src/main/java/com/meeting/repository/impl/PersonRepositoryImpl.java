@@ -1,9 +1,9 @@
 package com.meeting.repository.impl;
 
-import com.meeting.service.PersonService;
+import com.meeting.repository.PersonRepository;
 import org.springframework.stereotype.Repository;
 
-
-public class PersonRepositoryImpl implements PersonService {
+@Repository
+public class PersonRepositoryImpl implements PersonRepository {
 
 }

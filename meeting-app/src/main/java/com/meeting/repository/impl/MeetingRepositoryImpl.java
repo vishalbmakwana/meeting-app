@@ -1,9 +1,10 @@
 package com.meeting.repository.impl;
 
-import com.meeting.service.MeetingService;
-import com.meeting.service.PersonService;
+import com.meeting.repository.MeetingRepository;
+import org.springframework.stereotype.Repository;
 
-public class MeetingRepositoryImpl implements MeetingService {
+@Repository
+public class MeetingRepositoryImpl implements MeetingRepository {
 
 
 }

@@ -4,15 +4,21 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class MeetingDTO {
 
-    private String uuid;
+    private String id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Title is required")
     private String title;
     
     @NotNull(message = "Start time is required")
@@ -23,10 +29,10 @@ public class MeetingDTO {
     @Future(message = "End time must be in the future")
     private LocalDateTime endTime;
 
-    @NotNull(message = "Organizer is required")
-    private PersonDTO organizer;
+    @NotBlank(message = "Organizer email is required")
+    private String organizerEmail;
 
-    @NotEmpty(message = "At least one attendee is required")
-    private List<@NotNull PersonDTO> attendees;
+    @NotEmpty(message = "At least one attendee email is required")
+    private List<@NotBlank String> attendeeEmails;
 
 }
