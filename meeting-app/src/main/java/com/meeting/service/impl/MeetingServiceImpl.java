@@ -42,8 +42,13 @@ public class MeetingServiceImpl implements MeetingService {
         if (!isTimeSlotAvailable(allParticipants, startTime)) {
             throw new IllegalArgumentException("One or more participants have a scheduling conflict at " + startTime);
         }
-
-        return null;
+        
+        Meeting meeting = new Meeting(title.trim(), startTime, organizer, attendees);
+        meetingsById.put(meeting.getUuid(), meeting);
+        meetings.add(meeting);
+        
+        log.info("Successfully created meeting: {}", meeting.getUuid());
+        return meeting;
     }
 
     @Override
