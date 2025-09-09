@@ -43,7 +43,20 @@ public class Main {
                 "Standup", meeting1Time, alice1, Arrays.asList(alice2, alice3)
             );
             System.out.println("Created: " + meeting1.getTitle() + " at " + meeting1.getStartTime().format(FORMATTER));
-            
+            // invalid time - min
+            try {
+                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 11, 10, 30);
+                meetingService.createMeeting("Invalid", invalidTime, alice1, Arrays.asList(alice2));
+            } catch (IllegalArgumentException e) {
+                System.out.println("invalid validation: " + e.getMessage());
+            }
+            // time conflict 
+            try {
+                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 15, 10, 30);
+                meetingService.createMeeting("Invalid", invalidTime, alice1, Arrays.asList(alice2));
+            } catch (IllegalArgumentException e) {
+                System.out.println("invalid validation: " + e.getMessage());
+            }
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());
             e.printStackTrace();
