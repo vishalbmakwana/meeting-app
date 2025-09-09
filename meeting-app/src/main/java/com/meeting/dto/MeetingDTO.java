@@ -1,4 +1,4 @@
-package com.meeting.entity;
+package com.meeting.dto;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -8,13 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Meeting {
-
-    private Long id;
+public class MeetingDTO {
 
     @NotBlank(message = "Name is required")
     private String title;
-
+    
     @NotNull(message = "Start time is required")
     @Future(message = "Start time must be in the future")
     private LocalDateTime startTime;
@@ -24,9 +22,9 @@ public class Meeting {
     private LocalDateTime endTime;
 
     @NotNull(message = "Organizer is required")
-    private Person organizer;
+    private PersonDTO organizer;
 
     @NotEmpty(message = "At least one attendee is required")
-    private List<@NotNull Person> attendees;
+    private List<@NotNull PersonDTO> attendees;
 
 }
