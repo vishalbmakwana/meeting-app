@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/persons")
@@ -52,5 +53,14 @@ public class PersonController {
         return responseDTO;
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getPersonByEmail(@PathVariable String email) {
+        Optional<Person> person = personService.findByEmail(email);
+        if (person.isPresent()) {
+            return ResponseEntity.ok(person.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
