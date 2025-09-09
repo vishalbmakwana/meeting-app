@@ -39,10 +39,17 @@ public class Main {
             }
             
             LocalDateTime meeting1Time = LocalDateTime.of(2024, 12, 15, 10, 0);
+            LocalDateTime meeting2Time = LocalDateTime.of(2024, 12, 15, 14, 0);
+
             Meeting meeting1 = meetingService.createMeeting(
                 "Standup", meeting1Time, alice1, Arrays.asList(alice2, alice3)
             );
             System.out.println("Created: " + meeting1.getTitle() + " at " + meeting1.getStartTime().format(FORMATTER));
+            Meeting meeting2 = meetingService.createMeeting(
+                "Project Review", meeting2Time, alice2, Arrays.asList(alice1, alice4)
+            );
+            System.out.println("Created: " + meeting2.getTitle() + " at " + meeting2.getStartTime().format(FORMATTER));
+            
             // invalid time - min
             try {
                 LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 11, 10, 30);
@@ -50,12 +57,12 @@ public class Main {
             } catch (IllegalArgumentException e) {
                 System.out.println("invalid validation: " + e.getMessage());
             }
-            // time conflict 
+            // time conflict
             try {
-                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 15, 10, 30);
-                meetingService.createMeeting("Invalid", invalidTime, alice1, Arrays.asList(alice2));
+                LocalDateTime invalidTime = LocalDateTime.of(2024, 12, 15, 10, 0);
+                meetingService.createMeeting("Conflict", invalidTime, alice1, Arrays.asList(alice2));
             } catch (IllegalArgumentException e) {
-                System.out.println("invalid validation: " + e.getMessage());
+                System.out.println("time conflict : " + e.getMessage());
             }
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());
