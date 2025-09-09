@@ -81,7 +81,36 @@ public class MeetingServiceImpl implements MeetingService {
     }
 
     @Override
-    public List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int i) {
-        return List.of();
+    public List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime startDate, LocalDateTime endDate, int maxSuggestions) {
+        suggestAvailableTimeSlotsValidation(participants, startDate, endDate);
+        List<LocalDateTime> suggestions = new ArrayList<>();
+        LocalDateTime current = startDate.withMinute(0).withSecond(0).withNano(0);
+        // If start time is not at hr mark, move to NEXT hour
+        if (startDate.getMinute() != 0 || startDate.getSecond() != 0 || startDate.getNano() != 0) {
+            current = current.plusHours(1);
+        }
+        while (current.isBefore(endDate) && suggestions.size() < maxSuggestions) {
+            if (isTimeSlotAvailable(participants, current)) {
+                suggestions.add(current);
+            }
+            current = current.plusHours(1);
+        }
+        log.info("Found {} available time slots for {} persons between {} and {}", 
+                suggestions.size(), participants.size(), startDate, endDate);
+        
+        return suggestions;
     }
+
+    private static void suggestAvailableTimeSlotsValidation(List<Person> participants, LocalDateTime startDate, LocalDateTime endDate) {
+        if (participants == null || participants.isEmpty()) {
+        throw new IllegalArgumentException("At least one person is required");
+        }
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Start and end dates cannot be null");
+        }
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("Start date must be before end date");
+        }
+    }
+
 }

@@ -87,7 +87,7 @@ public class Main {
             
             System.out.println("Available slots:");
             for (LocalDateTime slot : suggestions) {
-                System.out.println("     - " + slot.format(FORMATTER));
+                System.out.println(slot.format(FORMATTER));
             }
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());

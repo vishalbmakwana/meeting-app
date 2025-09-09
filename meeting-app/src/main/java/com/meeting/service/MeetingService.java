@@ -13,5 +13,5 @@ public interface MeetingService {
 
     List<Meeting> getUpcomingMeetingsForPerson(Person person);
 
-    List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int i);
+    List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int maxSuggestions);
 }
