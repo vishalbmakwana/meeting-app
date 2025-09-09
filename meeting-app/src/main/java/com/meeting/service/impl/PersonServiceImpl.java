@@ -38,6 +38,14 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
+    public Optional<Person> findByEmail(String email) {
+        if (email == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(personsByEmail.get(email.trim().toLowerCase()));
+    }
+
+    @Override
     public boolean emailExists(String email) {
         if (email == null) {
             return false;
