@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Person {
 
     private String uuid;
