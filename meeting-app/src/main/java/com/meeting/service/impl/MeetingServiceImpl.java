@@ -28,6 +28,18 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Override
     public Meeting createMeeting(String title, LocalDateTime startTime, Person organizer, List<Person> attendees) {
+        // Validate that all persons involved exist in the system
+        List<Person> allParticipants = new ArrayList<>(attendees);
+        allParticipants.add(organizer);
+        
+        for (Person person : allParticipants) {
+            if (!personService.emailExists(person.getEmail())) {
+                throw new IllegalArgumentException("Person with email " + person.getEmail() + " does not exist in the system");
+            }
+        }
+        
+        
+
         return null;
     }
 }
