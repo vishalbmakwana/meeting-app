@@ -1,18 +1,24 @@
 package com.meeting.controller;
 
 
+import com.meeting.dto.MeetingDTO;
 import com.meeting.entity.Meeting;
+import com.meeting.entity.Person;
 import com.meeting.service.MeetingService;
 import com.meeting.service.PersonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/meetings")
@@ -25,8 +31,46 @@ public class MeetingController {
     private final PersonService personService;
 
     @PostMapping
-    public ResponseEntity<Meeting> createMeeting(@Valid @RequestBody Meeting meeting) {
-        return null;
+    public ResponseEntity<?> createMeeting(@Valid @RequestBody MeetingDTO meetingDTO) {
+        try {
+            // Find organizer
+            Optional<Person> organizer = personService.findByEmail(meetingDTO.getOrganizerEmail());
+            if (organizer.isEmpty()) {
+                return ResponseEntity.badRequest().body("Organizer with email " + meetingDTO.getOrganizerEmail() + " not found");
+            }
+
+            // Find attendees
+            List<Person> attendees = new ArrayList<>();
+            for (String email : meetingDTO.getAttendeeEmails()) {
+                Optional<Person> attendee = personService.findByEmail(email);
+                if (attendee.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Attendee with email " + email + " not found");
+                }
+                attendees.add(attendee.get());
+            }
+
+            Meeting meeting = meetingService.createMeeting(
+                    meetingDTO.getTitle(),
+                    meetingDTO.getStartTime(),
+                    organizer.get(),
+                    attendees
+            );
+
+            MeetingDTO responseDTO = MeetingDTO.builder()
+                    .uuid(meeting.getUuid())
+                    .title(meeting.getTitle())
+                    .startTime(meeting.getStartTime())
+                    .endTime(meeting.getEndTime())
+                    .organizerEmail(meeting.getOrganizer().getEmail())
+                    .attendeeEmails(meeting.getAttendees().stream().map(Person::getEmail).toList())
+                    .build();
+
+            log.info("Created meeting: {}", meeting.getTitle());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        } catch (IllegalArgumentException e) {
+            log.error("Failed to create meeting: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
