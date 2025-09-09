@@ -6,6 +6,7 @@ import com.meeting.entity.Person;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface MeetingService {
     Meeting createMeeting(String title, LocalDateTime startTime, Person organizer, List<Person> attendees);
@@ -17,4 +18,6 @@ public interface MeetingService {
     List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int maxSuggestions);
 
     List<Meeting> getAllMeetings();
+
+    Optional<Meeting> findById(String id);
 }

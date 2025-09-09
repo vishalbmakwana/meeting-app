@@ -118,4 +118,12 @@ public class MeetingServiceImpl implements MeetingService {
         }
     }
 
+    @Override
+    public Optional<Meeting> findById(String id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(meetingsById.get(id));
+    }
+
 }
