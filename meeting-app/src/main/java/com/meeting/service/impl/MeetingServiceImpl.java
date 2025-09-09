@@ -38,8 +38,29 @@ public class MeetingServiceImpl implements MeetingService {
             }
         }
         
-        
+        // Check for scheduling conflicts
+        if (!isTimeSlotAvailable(allParticipants, startTime)) {
+            throw new IllegalArgumentException("One or more participants have a scheduling conflict at " + startTime);
+        }
 
         return null;
+    }
+
+    @Override
+    public boolean isTimeSlotAvailable(List<Person> persons, LocalDateTime startTime) {
+        if (persons == null || persons.isEmpty() || startTime == null) {
+            return false;
+        }
+        
+        LocalDateTime endTime = startTime.plusHours(1);
+        
+        return meetings.stream()
+                .filter(meeting -> meeting.involvesAnyPerson(persons))
+                // to ensure no meeting existing during suggested startTime and endTime
+                // example - startTime 2 endTime 3
+                // meeting time = start 1 end 2 then >> 1 is before 3 (endTime) and 2 (startTime) is not before 2 > result allow
+                // meeting time = start 2 end 3 then >> 2 is before 3 (endTime) and 2 (startTime) is before 3 > result deny
+                // meeting time = start 3 end 4 then >> 3 is not before 3 (endTime) and 2 (startTime) is before 4 > result allow
+                .noneMatch(meeting ->  startTime.isBefore(meeting.getEndTime()) && meeting.getStartTime().isBefore(endTime));
     }
 }

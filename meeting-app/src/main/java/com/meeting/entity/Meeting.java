@@ -51,4 +51,8 @@ public class Meeting {
         }
         return startTime;
     }
+    public boolean involvesAnyPerson(List<Person> persons) {
+        return persons.stream().anyMatch(person -> 
+            this.organizer.equals(person) || this.attendees.contains(person));
+    }
 }
