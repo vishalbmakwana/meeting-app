@@ -79,4 +79,9 @@ public class MeetingServiceImpl implements MeetingService {
                 .sorted(Comparator.comparing(Meeting::getStartTime))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int i) {
+        return List.of();
+    }
 }

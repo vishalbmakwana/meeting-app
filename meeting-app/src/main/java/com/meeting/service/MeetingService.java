@@ -12,4 +12,6 @@ public interface MeetingService {
     boolean isTimeSlotAvailable(List<Person> persons, LocalDateTime startTime);
 
     List<Meeting> getUpcomingMeetingsForPerson(Person person);
+
+    List<LocalDateTime> suggestAvailableTimeSlots(List<Person> participants, LocalDateTime searchStart, LocalDateTime searchEnd, int i);
 }

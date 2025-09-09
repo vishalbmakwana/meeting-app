@@ -75,6 +75,20 @@ public class Main {
             }
             
          
+            
+            // Suggest available slots
+            LocalDateTime searchStart = LocalDateTime.of(2025, 9, 15, 8, 0);
+            LocalDateTime searchEnd = LocalDateTime.of(2025, 9, 15, 18, 0);
+            List<Person> participants = Arrays.asList(alice1, alice2, alice3);
+            
+            List<LocalDateTime> suggestions = meetingService.suggestAvailableTimeSlots(
+                participants, searchStart, searchEnd, 5
+            );
+            
+            System.out.println("Available slots:");
+            for (LocalDateTime slot : suggestions) {
+                System.out.println("     - " + slot.format(FORMATTER));
+            }
         } catch (Exception e) {
             System.err.println("Demo failed with error: " + e.getMessage());
             e.printStackTrace();
