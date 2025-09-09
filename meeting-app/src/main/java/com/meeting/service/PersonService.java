@@ -13,4 +13,6 @@ public interface PersonService {
     List<Person> getAllPersons();
 
     Optional<Person> findByEmail(String email);
+
+    Optional<Person> findById(String id);
 }

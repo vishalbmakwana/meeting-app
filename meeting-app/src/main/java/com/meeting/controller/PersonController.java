@@ -44,6 +44,16 @@ public class PersonController {
         return ResponseEntity.ok(persons);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPersonById(@PathVariable String id) {
+        Optional<Person> person = personService.findById(id);
+        if (person.isPresent()) {
+            return ResponseEntity.ok(person.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+	
     private static PersonDTO getPersonDTO(Person person) {
         PersonDTO responseDTO = PersonDTO.builder()
                 .uuid(person.getUuid())

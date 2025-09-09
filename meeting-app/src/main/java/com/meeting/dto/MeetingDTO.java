@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 public class MeetingDTO {
 
-    private String id;
+    private String uuid;
 
     @NotBlank(message = "Title is required")
     private String title;

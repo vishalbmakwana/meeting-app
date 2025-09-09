@@ -44,6 +44,15 @@ public class PersonServiceImpl implements PersonService {
         }
         return Optional.ofNullable(personsByEmail.get(email.trim().toLowerCase()));
     }
+	
+	@Override
+    public Optional<Person> findById(String id) {
+        if (id == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(personsById.get(id));
+    }
+	
 
     @Override
     public boolean emailExists(String email) {
