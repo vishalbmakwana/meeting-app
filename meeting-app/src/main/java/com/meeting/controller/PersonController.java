@@ -24,8 +24,22 @@ public class PersonController {
 
     private final PersonService personService;
 
-
-
+    @PostMapping
+    public ResponseEntity<?> createPerson(@Valid @RequestBody PersonDTO personDTO) {
+        try {
+            Person person = personService.createPerson(personDTO.getName(), personDTO.getEmail());
+            PersonDTO responseDTO = PersonDTO.builder()
+                    .uuid(person.getUuid())
+                    .name(person.getName())
+                    .email(person.getEmail())
+                    .build();
+            log.info("Created person: {}", person.getEmail());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        } catch (IllegalArgumentException e) {
+            log.error("Failed to create person: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 
 
