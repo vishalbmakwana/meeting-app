@@ -29,5 +29,20 @@ public class MeetingController {
         return null;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Meeting>> getAllMeetings() {
+        List<Meeting> meetings = meetingService.getAllMeetings();
+        log.info("Retrieved {} meetings", meetings.size());
+        return ResponseEntity.ok(meetings);
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMeetingById(@PathVariable String id) {
+        Optional<Meeting> meeting = meetingService.findById(id);
+        if (meeting.isPresent()) {
+            return ResponseEntity.ok(meeting.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
